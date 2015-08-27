@@ -4,6 +4,7 @@
 #include <mach/mach_vm.h>
 #include "mach_exc.h"
 #include "exc.h"
+#include <stdio.h>
 
 #ifdef	mig_external
 mig_external
