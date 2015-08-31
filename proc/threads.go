@@ -52,6 +52,7 @@ func (thread *Thread) Continue() error {
 	// if so, single step over it before continuing.
 	if bp, ok := thread.dbp.FindBreakpoint(pc); ok {
 		if !bp.hardware {
+			fmt.Println("single step past breakpoint")
 			if err := thread.Step(); err != nil {
 				return err
 			}

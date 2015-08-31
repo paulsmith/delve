@@ -267,6 +267,7 @@ func (dbp *Process) findExecutable(path string) (*macho.File, error) {
 }
 
 func (dbp *Process) trapWait(pid int) (*Thread, error) {
+	fmt.Println("begin trap wait---")
 	for {
 		fmt.Println("begin go wait")
 		port := C.mach_port_wait(dbp.os.portSet)

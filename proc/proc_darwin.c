@@ -137,6 +137,7 @@ mach_port_wait(mach_port_t port_set) {
 
 	switch (msg.hdr.msgh_id) {
 		case 2401: // Exception
+			puts("exception ------------------------------------ ");
 			if (thread_suspend(thread) != KERN_SUCCESS) return 0;
 			// Send our reply back so the kernel knows this exception has been handled.
 			kret = mach_send_reply(msg.hdr);

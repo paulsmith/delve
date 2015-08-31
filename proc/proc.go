@@ -314,7 +314,7 @@ func (dbp *Process) next() (err error) {
 			return err
 		}
 		// Make sure we're on the same goroutine, unless it has exited.
-		if tg.Id == g.Id || goroutineExiting {
+		if tg.Id == g.Id {
 			// Check to see if the goroutine has switched to another
 			// thread, if so make it the current thread.
 			if dbp.CurrentThread.Id != th.Id {
@@ -327,6 +327,7 @@ func (dbp *Process) next() (err error) {
 		// This thread was not running our goroutine.
 		// We continue it since our goroutine could
 		// potentially be on this threads queue.
+		fmt.Println("continue thread -----", th.Id)
 		if err = th.Continue(); err != nil {
 			return err
 		}
