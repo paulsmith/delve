@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"regexp"
+	"strings"
 
 	"github.com/derekparker/delve/proc"
 	"github.com/derekparker/delve/service/api"
@@ -366,7 +367,28 @@ func (d *Debugger) Registers(threadID int) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return regs.String(), err
+	str := regs.String()
+	// Annotate addresses in registers with a function name, if there is one
+	lines := strings.Split(str, "\n")
+	var buf []string
+	for _, line := range lines {
+		idx := strings.Index(line, " = ")
+		if idx == -1 {
+			continue
+		}
+		addr := "*" + line[idx+len(" = "):]
+		locs, err := d.FindLocation(addr)
+		if err != nil {
+			continue
+		}
+		for _, loc := range locs {
+			if loc.Function != nil {
+				line += " " + loc.Function.Name
+			}
+		}
+		buf = append(buf, line)
+	}
+	return strings.Join(buf, "\n"), nil
 }
 
 func (d *Debugger) LocalVariables(threadID int) ([]api.Variable, error) {
